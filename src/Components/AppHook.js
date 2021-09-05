@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Section from "./Section/Section";
 import Feedback from "./Feedback/Feedback";
@@ -8,14 +8,21 @@ export default function AppHook() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [total, setTotal] = useState(-1);
+  const [total, setTotal] = useState(0);
   const [positive, setPositive] = useState(0);
+
+  const notFirstRender = useRef(true);
 
   useEffect(() => {
     setPositive((good / total) * 100);
   }, [good, total]);
 
   useEffect(() => {
+    if (notFirstRender.current) {
+      notFirstRender.current = false;
+      return;
+    }
+
     setTotal((prevState) => prevState + 1);
   }, [good, neutral, bad]);
 
